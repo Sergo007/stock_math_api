@@ -20,6 +20,10 @@ $ docker build --target runtime -t stock_math_api .
 $ docker build --progress=plain --target test -t chat-test .
 ```
 
+## Postmen examples
+
+stock_math_api.postman_collection.json - located in repo
+
 ## Geometry example
 
 ```

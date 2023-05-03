@@ -1,6 +1,7 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 mod bfs_alg;
 mod distance_matrix_calculate;
+mod transform_route;
 mod travelling_salesman;
 use actix_web::{error, post, web, App, HttpResponse, HttpServer};
 use serde::{Deserialize, Serialize};
@@ -17,7 +18,7 @@ struct PostCalculateOptimalPathResponce {
     distance_matrix_time: String,
     traveling_salesman_time: String,
     distance: f64,
-    path: Vec<usize>,
+    path: Vec<(usize, usize)>,
 }
 
 #[post("/calculate_optimal_path")]
@@ -50,7 +51,7 @@ async fn post_calculate_optimal_path(
     let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
     resp.traveling_salesman_time = format!("{:?}", now1);
     resp.distance = tour.distance;
-    resp.path = tour.route;
+    resp.path = transform_route::get_transformed_route(req.points.as_slice(), tour.route);
 
     actix_web::web::Json(resp)
 }

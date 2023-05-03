@@ -57,6 +57,7 @@ async fn post_calculate_optimal_path(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    println!("app start");
     HttpServer::new(|| {
         let json_config = web::JsonConfig::default()
             .limit(1024 * 1024 * 10)
@@ -73,7 +74,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(json_config)
             .service(post_calculate_optimal_path)
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind("0.0.0.0:8080")?
     .run()
     .await
 }

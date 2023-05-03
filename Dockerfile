@@ -14,7 +14,7 @@ RUN cargo install --path . --root .
 # test stage
 #
 FROM base AS test
-RUN apk add --no-cache redis openrc
+RUN apk add --no-cache openrc
 
 CMD cd /builder && \
     cargo test

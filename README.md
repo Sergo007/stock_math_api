@@ -11,7 +11,7 @@ Open url: [http://localhost:8080/](http://localhost:8080/)
 ## Build image
 
 ```bash
-$ docker build --target runtime -t chat .
+$ docker build --target runtime -t stock_math_api .
 ```
 
 ## Run tests

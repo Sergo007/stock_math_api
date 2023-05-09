@@ -139,3 +139,12 @@ W___S___________________________________________
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 
 ```
+
+## Debug OPTIONS
+
+```bash
+curl -i -X OPTIONS -H "Origin: http://127.0.0.1:3000" \
+    -H 'Access-Control-Request-Method: POST' \
+    -H 'Access-Control-Request-Headers: Content-Type' \
+    "http://localhost:8080"
+```

@@ -1,9 +1,11 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 mod bfs_alg;
 mod distance_matrix_calculate;
+mod logging;
+mod middleware;
 mod transform_route;
 mod travelling_salesman;
-use actix_web::{error, post, web, App, HttpResponse, HttpServer};
+use actix_web::{error, middleware::Logger, options, post, web, App, HttpResponse, HttpServer};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
@@ -56,6 +58,12 @@ async fn post_calculate_optimal_path(
     actix_web::web::Json(resp)
 }
 
+#[ctor::ctor]
+fn init() {
+    // dotenv().ok();
+    logging::init();
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("app start");
@@ -72,7 +80,9 @@ async fn main() -> std::io::Result<()> {
                 .into()
             });
         App::new()
+            .wrap(Logger::default())
             .app_data(json_config)
+            .wrap(middleware::cors::cors())
             .service(post_calculate_optimal_path)
     })
     .bind("0.0.0.0:8080")?

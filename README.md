@@ -148,3 +148,8 @@ curl -i -X OPTIONS -H "Origin: http://127.0.0.1:3000" \
     -H 'Access-Control-Request-Headers: Content-Type' \
     "http://localhost:8080"
 ```
+
+## Next implementation
+
+1.  investigate [Concorde TSP Solver](https://www.math.uwaterloo.ca/tsp/concorde/gui/gui.htm)
+2.  impement algorithms used concorde for TSP on rust

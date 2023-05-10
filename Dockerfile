@@ -1,6 +1,6 @@
-FROM rust:1.69 AS base
+FROM alpine:latest AS base
 ENV TERM xterm-256color
-# RUN apk add --no-cache rust cargo pkgconfig openssl-dev
+RUN apk add --no-cache rust cargo pkgconfig openssl-dev
 WORKDIR /builder
 COPY . .
 

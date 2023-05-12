@@ -59,6 +59,37 @@ async fn post_calculate_optimal_path(
     actix_web::web::Json(resp)
 }
 
+#[post("/simulated_annealing/solve_by_distance_matrix")]
+async fn post_solve_by_distance_matrix(req: web::Json<Vec<Vec<f64>>>) -> String {
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    let tour = travelling_salesman::simulated_annealing::solve_by_distance_matrix(
+        &req,
+        time::Duration::seconds(1),
+    );
+    let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
+    // resp.traveling_salesman_time = format!("{:?}", now1);
+    // resp.distance = tour.distance;
+    let mut resp = "".to_string();
+    resp = resp + "time: " + &format!("{:?}", now1) + "\n";
+    resp = resp + "tour.distance: " + &format!("{:?}", tour.distance) + "\n";
+    resp = resp + "tour.route: " + &format!("{:?}", tour.route) + "\n";
+    resp
+}
+
+#[post("/branch_and_bound/solve_by_distance_matrix")]
+async fn post_solve_by_distance_matrix1(req: web::Json<Vec<Vec<f64>>>) -> String {
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    let (path, distance) = branch_and_bound::tsp_solver(&req);
+    let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
+    // resp.traveling_salesman_time = format!("{:?}", now1);
+    // resp.distance = tour.distance;
+    let mut resp = "".to_string();
+    resp = resp + "time: " + &format!("{:?}", now1) + "\n";
+    resp = resp + "tour.distance: " + &format!("{:?}", distance) + "\n";
+    resp = resp + "tour.route: " + &format!("{:?}", path) + "\n";
+    resp
+}
+
 #[derive(Serialize)]
 struct PostCalculateDistancesMatrixResponce {
     time: String,
@@ -155,6 +186,8 @@ async fn main() -> std::io::Result<()> {
             .service(post_calculate_optimal_path)
             .service(post_calc_distances_matrix)
             .service(post_calc_distances_matrix_text)
+            .service(post_solve_by_distance_matrix)
+            .service(post_solve_by_distance_matrix1)
     })
     .bind("0.0.0.0:8080")?
     .run()

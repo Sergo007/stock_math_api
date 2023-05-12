@@ -1,6 +1,6 @@
 IMAGE_LOCATION=gcr.io/ecare21-dev
 IMAGE_NAME=stock_math_api
-IMAGE_TAG=0.1.4
+IMAGE_TAG=0.1.5
 
 docker-build:
 	docker build --target runtime -t ${IMAGE_LOCATION}/${IMAGE_NAME}:${IMAGE_TAG} -f Dockerfile .

@@ -59,6 +59,74 @@ async fn post_calculate_optimal_path(
     actix_web::web::Json(resp)
 }
 
+#[derive(Serialize)]
+struct PostCalculateDistancesMatrixResponce {
+    time: String,
+    matrix: Vec<Vec<f64>>,
+}
+
+#[post("/calc_distances_matrix")]
+async fn post_calc_distances_matrix(
+    req: web::Json<PostCalculateOptimalPathRequest>,
+) -> web::Json<PostCalculateDistancesMatrixResponce> {
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    let matrix =
+        distance_matrix_calculate::get_distances_matrix(req.points.as_slice(), |point1, point2| {
+            let path = bfs_alg::bfs(&(req.geometry), *point1, *point2, |item| item == 'W');
+            match path {
+                Some(v) => v.len() as f64,
+                None => -1.0,
+            }
+        });
+    let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
+
+    let resp = PostCalculateDistancesMatrixResponce {
+        time: format!("{:?}", now1),
+        matrix,
+    };
+    actix_web::web::Json(resp)
+}
+
+#[post("/calc_distances_matrix_text")]
+async fn post_calc_distances_matrix_text(
+    req: web::Json<PostCalculateOptimalPathRequest>,
+) -> String {
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    let matrix =
+        distance_matrix_calculate::get_distances_matrix(req.points.as_slice(), |point1, point2| {
+            let path = bfs_alg::bfs(&(req.geometry), *point1, *point2, |item| item == 'W');
+            match path {
+                Some(v) => v.len() as f64,
+                None => -1.0,
+            }
+        });
+    let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
+    let mut resp = "".to_string();
+    resp = resp + "{\n";
+    let n = matrix.len();
+    for i in 0..n {
+        resp = resp + "\t{";
+        for j in 0..n {
+            if i == j {
+                if j != (n - 1) {
+                    resp = resp + "INF, ";
+                } else {
+                    resp = resp + "INF";
+                }
+                continue;
+            }
+            if j != (n - 1) {
+                resp = resp + &format!("{:}, ", matrix[i][j]).to_string();
+            } else {
+                resp = resp + &format!("{:}", matrix[i][j]).to_string();
+            }
+        }
+        resp = resp + "},\n";
+    }
+    resp = resp + "}\n";
+    resp
+}
+
 #[ctor::ctor]
 fn init() {
     // dotenv().ok();
@@ -85,6 +153,8 @@ async fn main() -> std::io::Result<()> {
             .app_data(json_config)
             .wrap(middleware::cors::cors())
             .service(post_calculate_optimal_path)
+            .service(post_calc_distances_matrix)
+            .service(post_calc_distances_matrix_text)
     })
     .bind("0.0.0.0:8080")?
     .run()

@@ -1,11 +1,12 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 mod bfs_alg;
+mod branch_and_bound;
 mod distance_matrix_calculate;
 mod logging;
 mod middleware;
 mod transform_route;
 mod travelling_salesman;
-use actix_web::{error, middleware::Logger, options, post, web, App, HttpResponse, HttpServer};
+use actix_web::{error, middleware::Logger, post, web, App, HttpResponse, HttpServer};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]

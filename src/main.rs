@@ -46,15 +46,25 @@ async fn post_calculate_optimal_path(
         });
     let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
     resp.distance_matrix_time = format!("{:?}", now1);
-    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
-    let tour = travelling_salesman::simulated_annealing::solve_by_distance_matrix(
-        &matrix,
-        time::Duration::seconds(1),
-    );
-    let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
-    resp.traveling_salesman_time = format!("{:?}", now1);
-    resp.distance = tour.distance;
-    resp.path = transform_route::get_transformed_route(req.points.as_slice(), tour.route);
+    // travelling_salesman calculation
+    if matrix.len() > 10 {
+        let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+        let tour = travelling_salesman::simulated_annealing::solve_by_distance_matrix(
+            &matrix,
+            time::Duration::seconds(1),
+        );
+        let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
+        resp.traveling_salesman_time = format!("{:?}", now1);
+        resp.distance = tour.distance;
+        resp.path = transform_route::get_transformed_route(req.points.as_slice(), tour.route);
+    } else {
+        let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+        let tour = travelling_salesman::brute_force::solve_by_distance_matrix(&matrix);
+        let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
+        resp.traveling_salesman_time = format!("{:?}", now1);
+        resp.distance = tour.distance;
+        resp.path = transform_route::get_transformed_route(req.points.as_slice(), tour.route);
+    }
 
     actix_web::web::Json(resp)
 }
@@ -167,6 +177,7 @@ fn init() {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("app start");
+    println!("http://localhost:8080");
     HttpServer::new(|| {
         let json_config = web::JsonConfig::default()
             .limit(1024 * 1024 * 10)

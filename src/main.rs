@@ -1,4 +1,5 @@
 use std::time::{SystemTime, UNIX_EPOCH};
+mod basket;
 mod bfs_alg;
 mod branch_and_bound;
 mod distance_matrix_calculate;
@@ -23,7 +24,13 @@ struct PostCalculateOptimalPathResponce {
     distance: f64,
     path: Vec<(usize, usize)>,
 }
-
+// todo https://habr.com/ru/articles/701458/
+// https://synset.com/ai/ru/tsp/Salesman_Intro.html
+// http://extremal-mechanics.org/archives/13094
+// https://ru.stackoverflow.com/questions/482044/%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D0%B2%D0%BE%D1%8F%D0%B6%D0%B5%D1%80%D0%B0-%D0%BD%D0%B0-php-%D0%9F%D0%BE%D0%B8%D1%81%D0%BA-%D0%BA%D1%80%D0%B0%D1%82%D1%87%D0%B0%D0%B9%D1%88%D0%B5%D0%B3%D0%BE-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%B0
+// https://www.lancaster.ac.uk/fas/psych/software/TSP/TSP.html
+// https://demonstrations.wolfram.com/TheTravelingSalesmanProblem22OptRemovalOfIntersections/
+// https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming/
 #[post("/calculate_optimal_path")]
 async fn post_calculate_optimal_path(
     req: web::Json<PostCalculateOptimalPathRequest>,
@@ -36,7 +43,7 @@ async fn post_calculate_optimal_path(
         path: Vec::new(),
     };
     let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
-    let matrix =
+    let matrix_distance =
         distance_matrix_calculate::get_distances_matrix(req.points.as_slice(), |point1, point2| {
             let path = bfs_alg::bfs(&(req.geometry), *point1, *point2, |item| item == 'W');
             match path {
@@ -46,6 +53,20 @@ async fn post_calculate_optimal_path(
         });
     let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
     resp.distance_matrix_time = format!("{:?}", now1);
+
+    // let matrix = basket::sum_mx(
+    //     &basket::normalized_matrix(&matrix_distance),
+    //     &basket::normalized_matrix(&basket::build_basket_weight_matrix(&vec![
+    //         1.0;
+    //         matrix_distance
+    //             .len()
+    //     ])),
+    // );
+    let matrix = basket::sum_mx(
+        &basket::normalized_matrix(&matrix_distance),
+        &basket::build_basket_weight_matrix(&vec![1.0; matrix_distance.len()]),
+    );
+    // let matrix = basket::build_basket_weight_matrix(&vec![1.0; matrix_distance.len()]);
     // travelling_salesman calculation
     if matrix.len() > 10 {
         let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();

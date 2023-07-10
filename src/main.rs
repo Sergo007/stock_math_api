@@ -5,6 +5,7 @@ mod branch_and_bound;
 mod distance_matrix_calculate;
 mod logging;
 mod middleware;
+mod naive_solution_min_path;
 mod transform_route;
 mod travelling_salesman;
 use actix_web::{error, middleware::Logger, post, web, App, HttpResponse, HttpServer};
@@ -54,6 +55,45 @@ async fn post_calculate_optimal_path(
     let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
     resp.distance_matrix_time = format!("{:?}", now1);
 
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    resp.path = naive_solution_min_path::solve(&req.geometry, &req.points);
+    let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
+    resp.traveling_salesman_time = format!("{:?}", now1);
+    resp.distance = 0.0;
+
+    actix_web::web::Json(resp)
+}
+
+// todo https://habr.com/ru/articles/701458/
+// https://synset.com/ai/ru/tsp/Salesman_Intro.html
+// http://extremal-mechanics.org/archives/13094
+// https://ru.stackoverflow.com/questions/482044/%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B0-%D0%BA%D0%BE%D0%BC%D0%BC%D0%B8%D0%B2%D0%BE%D1%8F%D0%B6%D0%B5%D1%80%D0%B0-%D0%BD%D0%B0-php-%D0%9F%D0%BE%D0%B8%D1%81%D0%BA-%D0%BA%D1%80%D0%B0%D1%82%D1%87%D0%B0%D0%B9%D1%88%D0%B5%D0%B3%D0%BE-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%B0
+// https://www.lancaster.ac.uk/fas/psych/software/TSP/TSP.html
+// https://demonstrations.wolfram.com/TheTravelingSalesmanProblem22OptRemovalOfIntersections/
+// https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming/
+#[post("/calculate_optimal_path_old")]
+async fn post_calculate_optimal_path_old(
+    req: web::Json<PostCalculateOptimalPathRequest>,
+) -> web::Json<PostCalculateOptimalPathResponce> {
+    let mut resp = PostCalculateOptimalPathResponce {
+        algorithm: "simulated_annealing".to_string(),
+        distance_matrix_time: "".to_string(),
+        traveling_salesman_time: "".to_string(),
+        distance: -1.0,
+        path: Vec::new(),
+    };
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    let matrix_distance =
+        distance_matrix_calculate::get_distances_matrix(req.points.as_slice(), |point1, point2| {
+            let path = bfs_alg::bfs(&(req.geometry), *point1, *point2, |item| item == 'W');
+            match path {
+                Some(v) => v.len() as f64,
+                None => -1.0,
+            }
+        });
+    let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
+    resp.distance_matrix_time = format!("{:?}", now1);
+
     // let matrix = basket::sum_mx(
     //     &basket::normalized_matrix(&matrix_distance),
     //     &basket::normalized_matrix(&basket::build_basket_weight_matrix(&vec![
@@ -62,16 +102,16 @@ async fn post_calculate_optimal_path(
     //             .len()
     //     ])),
     // );
-    let matrix = basket::sum_mx(
-        &basket::normalized_matrix(&matrix_distance),
-        &basket::build_basket_weight_matrix(&vec![1.0; matrix_distance.len()]),
-    );
+    // let matrix = basket::sum_mx(
+    //     &basket::normalized_matrix(&matrix_distance),
+    //     &basket::build_basket_weight_matrix(&vec![1.0; matrix_distance.len()]),
+    // );
     // let matrix = basket::build_basket_weight_matrix(&vec![1.0; matrix_distance.len()]);
     // travelling_salesman calculation
-    if matrix.len() > 10 {
+    if matrix_distance.len() > 10 {
         let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
         let tour = travelling_salesman::simulated_annealing::solve_by_distance_matrix(
-            &matrix,
+            &matrix_distance,
             time::Duration::seconds(1),
         );
         let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
@@ -80,7 +120,7 @@ async fn post_calculate_optimal_path(
         resp.path = transform_route::get_transformed_route(req.points.as_slice(), tour.route);
     } else {
         let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
-        let tour = travelling_salesman::brute_force::solve_by_distance_matrix(&matrix);
+        let tour = travelling_salesman::brute_force::solve_by_distance_matrix(&matrix_distance);
         let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
         resp.traveling_salesman_time = format!("{:?}", now1);
         resp.distance = tour.distance;
@@ -216,6 +256,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(json_config)
             .wrap(middleware::cors::cors())
             .service(post_calculate_optimal_path)
+            .service(post_calculate_optimal_path_old)
             .service(post_calc_distances_matrix)
             .service(post_calc_distances_matrix_text)
             .service(post_solve_by_distance_matrix)

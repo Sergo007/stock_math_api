@@ -41,12 +41,14 @@ pub fn solve(geometry: &Vec<Vec<char>>, points: &Vec<(usize, usize)>) -> Vec<(us
     }
     let mut resp: Vec<(usize, usize)> = Vec::with_capacity(points_len + 1);
     resp.push(points[0]);
-    for i in 0..geometry.len() {
-        for j in 0..geometry[i].len() {
-            if geometry[i][j] == 'P' {
+    for i in 0..m.len() {
+        for j in 0..m[i].len() {
+            if m[i][j] == 'P' {
                 resp.push((i, j));
             }
+            // print!("{}", m[i][j])
         }
+        // println!("")
     }
     resp.push(points[0]);
     resp

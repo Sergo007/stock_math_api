@@ -1,3 +1,4 @@
+use actix_files as fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 mod basket;
 mod bfs_alg;
@@ -261,6 +262,13 @@ async fn main() -> std::io::Result<()> {
             .service(post_calc_distances_matrix_text)
             .service(post_solve_by_distance_matrix)
             .service(post_solve_by_distance_matrix1)
+            // .service(fs::Files::new("/ui", "./ui-admin").index_file("index.html"))
+            .service(
+                fs::Files::new("/ui", "./ui-admin")
+                    .show_files_listing()
+                    .use_last_modified(true)
+                    .index_file("index.html"),
+            )
     })
     .bind("0.0.0.0:8080")?
     .run()

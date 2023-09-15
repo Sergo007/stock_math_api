@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:v-on="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="x-ua-compatible" content="IE=Edge">
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Stock builder</title>
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /> -->
+  <link rel="stylesheet" href="./ui/libs/FontAwesome/css/fontawesome-all.css" />
+  <link rel="stylesheet" href="./ui/css/popup-component.css" />
+  <link rel="stylesheet" href="./ui/css/tooltip.css" />
+  <link rel="stylesheet" href="./ui/css/tree-component.css" />
+  <link rel="stylesheet" href="./ui/css/table.css" />
+  <link rel="stylesheet" href="./ui/css/style.css" />
+  <link rel="stylesheet" href="./ui/css/stock.css" />
+
+</head>
+
+<body>
+  <!--<pre ><code id="pre"></code></pre>-->
+  <div class="root-app-container" id="app">
+    <router-view></router-view>
+  </div>
+  <script>
+    window.URL = '/admin/api';
+  </script>
+  <script src="./ui/js/local-storage-service.js"></script>
+  <script src="./ui/libs/polyfils.js"></script>
+  <script src="./ui/libs/axios.js"></script>
+  <script src="./ui/libs/reconnecting-websocket.js"></script>
+
+
+  <script src="./ui/libs/vue.js"></script>
+  <script src="./ui/libs/vue.router.js"></script>
+  <!-- components  -->
+  <script src="./ui/components/ui/Table.js"></script>
+  <!--smart popups-->
+  <script src="./ui/components/ui/popup-form-repeater.js"></script>
+  <script src="./ui/components/ui/tooltip.js"></script>
+  <script src="./ui/components/ui/popup-component.js"></script>
+  <!-- tree  -->
+  <script src="./ui/components/tree/new-directory-popup-component.js"></script>
+  <script src="./ui/components/tree/new-project-popup-component.js"></script>
+  <script src="./ui/components/confirmation-message-popup-component.js"></script>
+  <script src="./ui/components/tree/tree.js"></script>
+  <!-- tree END  -->
+  <script src="./ui/components/admin.js"></script>
+
+  <!-- stock-builder-page  -->
+  <script src="./ui/components/stock-builder-page/edit-geometry-item.js"></script>
+  <script src="./ui/components/stock-builder-page/stock-builder-page.js"></script>
+  <!-- stock-builder-page END  -->
+  <!-- users  -->
+  <script src="./ui/components/users/new-user-popup-component.js"></script>
+  <script src="./ui/components/users/user-details.js"></script>
+  <script src="./ui/components/users/users.js"></script>
+  <!-- users END  -->
+
+  <!-- END components  -->
+  <script src="./ui/js/index.js"></script>
+
+</body>
+
+</html>

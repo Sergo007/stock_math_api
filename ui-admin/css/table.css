@@ -1,0 +1,156 @@
+
+.flexy {
+    display: block;
+    width: 100%;
+    height: 320px;
+    overflow: auto;
+}
+
+.flexy thead {
+    display: flex;
+    -webkit-flex-flow: row;
+}
+
+.flexy thead tr {
+    display: flex;
+    width: 100%;
+    -webkit-align-items: stretch;
+    padding-right: 5px;
+}
+
+.flexy tbody {
+    display: flex;
+    height: 100%;
+    overflow: auto;
+    flex-direction: column;
+}
+.flexy tbody tr{
+    display: flex;
+    width: 100%;
+}
+
+.flexy tr td, .flexy tr th {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.MuiTable-root {
+    width: 100%;
+    display: table;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.MuiTableHead-root {
+    display: table-header-group;
+}
+
+.MuiTableBody-root {
+    display: table-row-group;
+}
+
+/* Row  */
+.MuiTableRow-root {
+    color: inherit;
+    height: 48px;
+    min-height: 48px;
+    display: table-row;
+    outline: none;
+    vertical-align: middle;
+}
+
+.MuiTableRow-root.MuiTableRow-selected-794 {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.MuiTableRow-root.MuiTableRow-hover-795:hover {
+    background-color: rgba(0, 0, 0, 0.07);
+}
+
+.MuiTableRow-head {
+    height: 48px;
+}
+
+.MuiTableRow-footer {
+    height: 48px;
+}
+
+/* Cell  */
+.MuiTableCell-root {
+    display: table-cell;
+    padding: 4px 10px 4px 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+    vertical-align: inherit;
+}
+
+.MuiTableCell-root:last-child {
+    padding-right: 10px;
+}
+
+.MuiTableCell-head {
+    color: #868aa8;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.MuiTableCell-body {
+    color: #868aa8;
+    font-size: 0.8125rem;
+    font-weight: 400;
+}
+
+.MuiTableCell-footer-801 {
+    color: #868aa8;
+    font-size: 0.75rem;
+    border-bottom: 0;
+}
+
+.MuiTableCell-numeric {
+    text-align: right;
+    flex-direction: row-reverse;
+}
+
+.MuiTableCell-paddingDense {
+    padding-right: 24px;
+}
+
+.MuiTableCell-paddingCheckbox {
+    padding: 0 12px;
+}
+
+.MuiTableCell-paddingCheckbox:last-child {
+    padding-right: 12px;
+}
+
+.MuiTableCell-paddingNone {
+    padding: 0;
+}
+
+.MuiTableCell-paddingNone:last-child {
+    padding: 0;
+}
+
+.MuiTableCell-alignLeft {
+    text-align: left;
+    justify-content: flex-start;
+}
+
+.MuiTableCell-alignCenter {
+    text-align: center;
+    justify-content: center;
+}
+
+.MuiTableCell-alignRight {
+    text-align: right;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+.MuiTableCell-alignJustify {
+    text-align: justify;
+}

@@ -27,7 +27,7 @@ FROM alpine:latest AS runtime
 RUN apk add --no-cache libgcc
 
 COPY --from=builder /builder/bin/* /usr/local/bin
-
+COPY ui-admin /usr/local/bin/ui-admin
 RUN adduser user -D -G users
 USER user
 

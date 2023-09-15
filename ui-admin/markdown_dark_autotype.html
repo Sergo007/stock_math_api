@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Markdown Output with Delay</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      background-color: #0d1117;
+    }
+
+    #output {
+      padding: 10px 20px 60px 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <button onclick="onButtonMdSelectClicked()">Select *.md</button>
+  <article id="output" class="markdown-body">
+    <!-- <h1>Unicorns</h1>
+    <p>All the things</p> -->
+  </article>
+  <!-- <div id="output"></div> -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-dark.css"
+    integrity="sha512-6TNeuM0qy53coeyqVAiTdCjcBi26zGhbvVIjTOLNI0lcWW0Aoa3/TwMcPWNSjbmmK8nsCowwKIp9gnBCi4J3YQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script>
+    /**
+     * Select file(s).
+     * @param {String} contentType The content type of files you wish to select. For instance, use "image/*" to select all types of images.
+     * @param {Boolean} multiple Indicates if the user can select multiple files.
+     * @returns {Promise<File|File[]>} A promise of a file or array of files in case the multiple parameter is true.
+     */
+    function selectFile(contentType, multiple) {
+      return new Promise(resolve => {
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.multiple = multiple;
+        input.accept = contentType;
+
+        input.onchange = () => {
+          let files = Array.from(input.files);
+          if (multiple)
+            resolve(files);
+          else
+            resolve(files[0]);
+        };
+
+        input.click();
+      });
+    }
+
+    function readContent(mdfile) {
+      return new Promise(resolve => {
+        var reader = new FileReader();
+        reader.readAsText(mdfile, 'UTF-8');
+        reader.onload = readerEvent => {
+          resolve(readerEvent.target.result);
+        }
+      });
+    }
+
+    /**
+     * return all indexes markdown links.
+     * for play with [regexp find all markdown links](https://regex101.com/r/g2XFaG/1)
+     * @param {String} mdtext The markdown text.
+     * @returns {Array<number[]>} example [[start_link_index, end_link_index]]
+     */
+    function markdownLinksIndexes(mdtext) {
+      const regex = /\[(.[^\[\]]*)\]\((htt\ps?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9]{1,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))\)/gm
+      const matches = [];
+      while ((match = regex.exec(mdtext)) !== null) {
+        matches.push([match.index, match.index + match[0].length]);
+      }
+      return matches
+    }
+
+    function moveCurrentIndex(indexes, index) {
+      for (let [min, max] of indexes) {
+        if (index > min && index < max) {
+          return max
+        }
+      }
+      return index
+    }
+
+    async function output(markdownText, charCount) {
+      const outputElement = document.getElementById('output');
+      const linksIndexes = markdownLinksIndexes(markdownText);
+      let i = 0;
+      while (i < markdownText.length + charCount) {
+        i = moveCurrentIndex(linksIndexes, i);
+        outputElement.innerHTML = marked.parse(markdownText.substring(0, i));
+        window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
+        await new Promise(r => setTimeout(r, 16 * 2 * charCount))
+        i += charCount
+      }
+    }
+
+    async function onButtonMdSelectClicked() {
+      let mdfile = await selectFile("md");
+      let mdcontent = await readContent(mdfile);
+      await output(mdcontent, 5);
+    }
+  </script>
+</body>
+
+</html>

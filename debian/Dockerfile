@@ -21,7 +21,7 @@ RUN groupadd $APP_USER \
     && mkdir -p ${APP}
 
 COPY --from=builder /rust-docker-web/target/release/stock_math_api ${APP}/rust-docker-web
-
+COPY ui-admin ${APP}/ui-admin
 RUN chown -R $APP_USER:$APP_USER ${APP}
 
 USER $APP_USER

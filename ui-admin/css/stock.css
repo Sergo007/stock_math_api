@@ -1,0 +1,78 @@
+/* sg -- stock geometry */
+
+.sg-builder {
+  display: flex;
+  flex-direction: column;
+}
+
+.sg-builder .sg-controls-height {
+  height: 30px;
+}
+.sg-builder .sg-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background-color: white;
+}
+.sg-builder .sg-controls .sg-zoom {
+  width: 50px;
+}
+
+.sg-builder .sg-container {
+  display: flex;
+  
+}
+
+
+.sg-builder .sg-grid-container{
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e6e6e6;
+}
+
+.sg-builder .sg-grid-container .sg-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.sg-builder .sg-grid-container .sg-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e6e6e6;
+  min-width: 60px;
+  min-height: 60px;
+  cursor: pointer;
+}
+
+.sg-builder .sg-grid-container .sg-item.wall {
+  background-color: #000000;
+}
+
+.sg-builder .sg-grid-container .sg-item.stock_item {
+  background-color: #afd4ff;
+}
+
+.sg-builder .sg-grid-container .sg-item.packaging_point {
+  background-color: #ff3c3c;
+}
+
+.sg-builder .sg-grid-container .sg-item.request_point_number {
+  background-color: #ccff96;
+}
+
+.sg-builder .sg-grid-container .sg-item.big_stock_item {
+  background-color: #140190;
+}
+
+.sg-builder .sg-grid-container .sg-item:hover {
+  border: 1px solid #000000;
+}
+
+.sg-builder .sg-grid-container .sg-item.selected {
+  border: 1px solid #000000;
+}
+
+.sg-builder .sg-grid-container .sg-item span {
+  font-size: 14px;
+}

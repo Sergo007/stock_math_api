@@ -3,37 +3,9 @@
 /// `cities` is an array slice, containing `(x,y)` tuple coordinates for each city.
 ///
 /// Returns a `Vec<Vec<f64>>`, containing the distance matrix.
-///
-///# Examples
-///
-///```
-///extern crate travelling_salesman;
-///
-///fn main() {
-///    let cities = [
-///      (27.0, 78.0),
-///      (18.0, 24.0),
-///      (48.0, 62.0),
-///      (83.0, 77.0),
-///      (55.0, 56.0),
-///    ];
-///
-///    let distance_matrix = travelling_salesman::get_distance_matrix(&cities);
-///
-///    println!("The distance between 1 and 2 is: {}", distance_matrix[1][2]);
-///}
 ///```
 pub fn solve(geometry: &Vec<Vec<char>>, points: &Vec<(usize, usize)>) -> Vec<(usize, usize)> {
-    // copy geometry
-    let mut m: Vec<Vec<char>> = Vec::with_capacity(geometry.len());
-    for i in 0..geometry.len() {
-        let mut row: Vec<char> = Vec::with_capacity(geometry[i].len());
-        for j in 0..geometry[i].len() {
-            row.push(geometry[i][j]);
-        }
-        m.push(row);
-    }
-    // end copy geometry
+    let mut m: Vec<Vec<char>> = geometry.clone();
 
     let points_len = points.len();
     for i in 1..points_len {
@@ -54,53 +26,114 @@ pub fn solve(geometry: &Vec<Vec<char>>, points: &Vec<(usize, usize)>) -> Vec<(us
     resp
 }
 
-//region *** tests function here ***
-// #[cfg(test)]
-// mod get_distances_matrix_tests {
-//     use super::*;
-//     fn get_distance_matrix<F>(cities: &[(f64, f64)], distance: F) -> Vec<Vec<f64>>
-//     where
-//         F: Fn(&(f64, f64), &(f64, f64)) -> f64,
-//     {
-//         cities
-//             .iter()
-//             .map(|row| {
-//                 cities
-//                     .iter()
-//                     .map(|column| distance(row, column))
-//                     .collect::<Vec<f64>>()
-//             })
-//             .collect::<Vec<Vec<f64>>>()
-//     }
-//     fn azimut_distanse(point1: &(f64, f64), point2: &(f64, f64)) -> f64 {
-//         ((point1.0 - point2.0).powi(2) + (point1.1 - point2.1).powi(2)).sqrt()
-//     }
-//     #[test]
-//     fn test_get_distances_matrix() {
-//         let points = [
-//             (27.0, 78.0),
-//             (18.0, 24.0),
-//             (48.0, 62.0),
-//             (83.0, 77.0),
-//             (55.0, 56.0),
-//             (27.0, 78.0),
-//             (18.0, 24.0),
-//             (48.0, 62.0),
-//             (83.0, 77.0),
-//             (55.0, 56.0),
-//             (70.0, 87.0),
-//             (1.0, 1.0),
-//             (10.0, 10.0),
-//             (17.0, 27.0),
-//             (0.0, 0.0),
-//             (100.0, 120.0),
-//             (-100.0, 120.0),
-//         ];
-//         let matrix1 = get_distance_matrix(&points, azimut_distanse);
-//         let matrix2 = get_distances_matrix(&points, azimut_distanse);
-//         // matrix_print(&matrix);
+// region *** tests function here ***
+#[cfg(test)]
+mod solve_tests {
+    use super::*;
+    #[test]
+    fn test_solve1() {
+        let geometry: Vec<Vec<char>> = vec![
+            //j   0    1    2    3    4    5    6    7       i
+            vec!['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'], // 0
+            vec!['W', 'P', '_', '_', '_', 'P', '_', 'W'], // 1
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W'], // 2
+            vec!['W', '_', '_', '_', '_', '_', 'P', 'W'], // 3
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W'], // 4
+            vec!['W', 'P', '_', '_', '_', '_', '_', 'W'], // 5
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W'], // 6
+            vec!['W', '_', '_', '_', '_', '_', 'P', 'W'], // 7
+            vec!['W', 'S', '_', '_', '_', '_', '_', '_'], // 8
+            vec!['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'], // 9
+        ];
+        let points: Vec<(usize, usize)> = vec![(8, 1), (1, 1), (1, 5), (3, 6), (5, 1), (7, 6)];
+        let path = solve(&geometry, &points);
+        let path_should_be: Vec<(usize, usize)> =
+            vec![(8, 1), (1, 1), (1, 5), (3, 6), (5, 1), (7, 6), (8, 1)];
+        assert_eq!(path, path_should_be)
+    }
 
-//         assert_eq!(matrix1, matrix2)
-//     }
-// }
-// //endregion
+    #[test]
+    fn test_solve2() {
+        let geometry: Vec<Vec<char>> = vec![
+            //j   0    1    2    3    4    5    6    7       i
+            vec!['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'], // 0
+            vec!['W', 'P', 'P', '_', 'P', 'P', 'P', 'W'], // 1
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W'], // 2
+            vec!['W', 'P', '_', '_', '_', 'P', 'P', 'W'], // 3
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W'], // 4
+            vec!['W', '_', 'P', '_', 'P', '_', '_', 'W'], // 5
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W'], // 6
+            vec!['W', '_', '_', '_', 'P', '_', 'P', 'W'], // 7
+            vec!['W', 'S', '_', '_', '_', '_', '_', '_'], // 8
+            vec!['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'], // 9
+        ];
+        let points: Vec<(usize, usize)> = vec![
+            (8, 1),
+            (1, 1),
+            (1, 2),
+            (1, 4),
+            (1, 5),
+            (1, 6),
+            (3, 1),
+            (3, 5),
+            (3, 6),
+            (5, 2),
+            (5, 4),
+            (7, 4),
+            (7, 6),
+        ];
+        let path = solve(&geometry, &points);
+        let path_should_be: Vec<(usize, usize)> = vec![
+            (8, 1),
+            //
+            (1, 1),
+            (2, 1),
+            //
+            (1, 6),
+            (1, 5),
+            (1, 4),
+            //
+            (3, 1),
+            //
+            (3, 6),
+            (3, 5),
+            //
+            (5, 2),
+            //
+            (5, 4),
+            //
+            (7, 6),
+            (7, 4),
+            //
+            (8, 1),
+        ];
+        assert_eq!(path, path_should_be)
+    }
+
+    #[test]
+    fn test_solve3() {
+        let geometry: Vec<Vec<char>> = vec![
+            //j   0    1    2    3    4    5    6    7    8    9       i
+            vec!['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'], // 0
+            vec!['W', '_', '_', 'P', '_', '_', '_', '_', '_', 'W'], // 1
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W', 'W', 'W'], // 2
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W', 'W', 'W'], // 3
+            vec!['W', 'P', '_', '_', '_', '_', '_', '_', '_', 'W'], // 4
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W', 'W', 'W'], // 5
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W', 'W', 'W'], // 6
+            vec!['W', '_', 'P', '_', 'P', '_', '_', '_', '_', 'W'], // 7
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W', 'W', 'W'], // 8
+            vec!['W', 'W', 'W', '_', 'W', 'W', 'W', 'W', 'W', 'W'], // 9
+            vec!['W', '_', '_', '_', 'P', '_', '_', '_', '_', 'W'], // 10
+            vec!['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', '_', 'W'], // 11
+            vec!['_', '_', '_', '_', '_', '_', '_', 'W', 'S', 'W'], // 12
+            vec!['_', '_', '_', '_', '_', '_', '_', 'W', 'W', 'W'], // 13
+        ];
+        let points: Vec<(usize, usize)> = vec![(12, 8), (1, 3), (4, 1), (7, 2), (7, 4), (10, 4)];
+        let path = solve(&geometry, &points);
+        let path_should_be: Vec<(usize, usize)> =
+            vec![(12, 8), (1, 3), (4, 1), (7, 2), (7, 4), (10, 4), (12, 8)];
+        assert_eq!(path, path_should_be)
+    }
+}
+//endregion

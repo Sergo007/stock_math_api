@@ -1,3 +1,5 @@
+#![allow(dead_code, unused_imports, unused_variables)]
+
 use actix_files as fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 mod basket;

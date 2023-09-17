@@ -47,14 +47,14 @@ async fn post_calculate_optimal_path(
         path: Vec::new(),
     };
     let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
-    let matrix_distance =
-        distance_matrix_calculate::get_distances_matrix(req.points.as_slice(), |point1, point2| {
-            let path = bfs_alg::bfs(&(req.geometry), *point1, *point2, |item| item == 'W');
-            match path {
-                Some(v) => v.len() as f64,
-                None => -1.0,
-            }
-        });
+    // let matrix_distance =
+    //     distance_matrix_calculate::get_distances_matrix(req.points.as_slice(), |point1, point2| {
+    //         let path = bfs_alg::bfs(&(req.geometry), *point1, *point2, |item| item == 'W');
+    //         match path {
+    //             Some(v) => v.len() as f64,
+    //             None => -1.0,
+    //         }
+    //     });
     let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
     resp.distance_matrix_time = format!("{:?}", now1);
 
@@ -241,7 +241,7 @@ fn init() {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("app start");
-    println!("http://localhost:8080");
+    println!("http://localhost:8080/ui");
     HttpServer::new(|| {
         let json_config = web::JsonConfig::default()
             .limit(1024 * 1024 * 10)

@@ -81,8 +81,7 @@ Vue.component('stock-builder-page', {
     },
     getOptiumRoute(request) {
       // return axios.post('https://stock-math-api-5bjvbywvdq-uc.a.run.app/calculate_optimal_path', request)
-      // return axios.post('https://stock-math-api-5bjvbywvdq-uc.a.run.app/calculate_optimal_path', request)
-      return axios.post('http://localhost:8080/calculate_optimal_path', request)
+      return axios.post('/calculate_optimal_path', request)
       .then((response) => {
         if (!response?.data?.algorithm) {
           console.log("getOptiumRoute", response.data)
@@ -95,7 +94,7 @@ Vue.component('stock-builder-page', {
       })
     },
     getDIstanceMatrixText(request) {
-      return axios.post('https://stock-math-api-5bjvbywvdq-uc.a.run.app/calc_distances_matrix_text', request)
+      return axios.post('/calc_distances_matrix_text', request)
       .then((response) => {
         return response?.data
       })

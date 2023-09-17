@@ -2,9 +2,12 @@
 
 use actix_files as fs;
 use std::time::{SystemTime, UNIX_EPOCH};
+use tracing::*;
+use tracing_json2::JsonTracing;
 mod basket;
 mod bfs_alg;
 mod branch_and_bound;
+mod config;
 mod distance_matrix_calculate;
 mod logging;
 mod middleware;
@@ -14,13 +17,13 @@ mod travelling_salesman;
 use actix_web::{error, middleware::Logger, post, web, App, HttpResponse, HttpServer};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize, JsonTracing, Clone)]
 struct PostCalculateOptimalPathRequest {
     geometry: Vec<Vec<char>>,
     points: Vec<(usize, usize)>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, JsonTracing, Clone)]
 struct PostCalculateOptimalPathResponce {
     algorithm: String,
     distance_matrix_time: String,
@@ -63,7 +66,7 @@ async fn post_calculate_optimal_path(
     let now1 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap() - now;
     resp.traveling_salesman_time = format!("{:?}", now1);
     resp.distance = 0.0;
-
+    info!(request = ?req.clone(), responce = ?resp.clone(), "handle request");
     actix_web::web::Json(resp)
 }
 
@@ -241,7 +244,10 @@ fn init() {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("app start");
-    println!("http://localhost:8080/ui");
+    info!("app start");
+    let app_cfg = config::Application::from_env();
+    info!("starting application {}:{}", app_cfg.url(), app_cfg.port());
+    info!("geometry builder {}:{}/ui", app_cfg.url(), app_cfg.port());
     HttpServer::new(|| {
         let json_config = web::JsonConfig::default()
             .limit(1024 * 1024 * 10)

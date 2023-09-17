@@ -2,6 +2,17 @@
 
 Search for the best way through the warehouse to collect different goods for further shipment to the client.
 
+## Application environment
+
+following system environment variables are used for `auth0` connection configuration.
+
+- `APPLICATION_URL` - URL of current instance, e.g. http://localhost:8080
+- `APPLICATION_PORT` - Port number backend shall listen on. Unless provided, port number from `URL` will be used, or default `8080`
+- `APPLICATION_BIND` - IP address server shall listen on. Unless provided, `0.0.0.0` will be used
+- `APPLICATION_ALLOWED_ORIGIN` - Allowed origin for processing http requests. Unless provided, `http://localhost:8000` will be used
+- `APPLICATION_MACHINE_ID` - Machine ID for current instance, used for snowflake generation (default: 1)
+- `APPLICATION_NODE_ID` - Node ID for current instance, used for snowflake generation (default: 1)
+
 ## API Documentation
 
 #### POST /calculate_optimal_path

@@ -19,6 +19,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, JsonTracing, Clone)]
 struct PostCalculateOptimalPathRequest {
+    request_id: Option<String>,
     geometry: Vec<Vec<char>>,
     points: Vec<(usize, usize)>,
 }

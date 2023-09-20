@@ -1451,7 +1451,7 @@ dependencies = [
 [[package]]
 name = "tracing-json"
 version = "0.1.0"
-source = "git+https://github.com/sre-university/tracing-json2.git?branch=show_file#79bdc6d6719ff0206e1c12851bd6de9848c43d48"
+source = "git+https://github.com/sre-university/tracing-json2.git#c016010cc6a7b5376adfc389fb842268d03e0af0"
 dependencies = [
  "chrono",
  "serde",
@@ -1505,7 +1505,7 @@ dependencies = [
 [[package]]
 name = "tracing_json_derive"
 version = "0.1.0"
-source = "git+https://github.com/sre-university/tracing-json2.git?branch=show_file#79bdc6d6719ff0206e1c12851bd6de9848c43d48"
+source = "git+https://github.com/sre-university/tracing-json2.git#c016010cc6a7b5376adfc389fb842268d03e0af0"
 dependencies = [
  "proc-macro2",
  "quote",

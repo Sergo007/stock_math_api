@@ -6,3 +6,4 @@ data
 deploy.sh
 Makefile
 *.json
+Dockerfile

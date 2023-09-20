@@ -10,8 +10,8 @@ pub struct Logging {
 }
 
 fn default_format() -> String {
-    // "text".to_string()
-    "json".to_string()
+    "text".to_string()
+    // "json".to_string()
 }
 
 fn default_level() -> String {

@@ -24,7 +24,10 @@ serde_json = "1.0"
 tracing = "0.1"
 tracing-core = { version = "0.1" }
 tracing-subscriber = { version = "0.3", features = ["json"] }
-tracing-json2 = { git = "https://github.com/sre-university/tracing-json2.git", branch = "show_file", package = "tracing-json", features = [
+# tracing-json2 = { git = "https://github.com/sre-university/tracing-json2.git", branch = "show_file", package = "tracing-json", features = [
+#   "derive",
+# ] }
+tracing-json2 = { git = "https://github.com/sre-university/tracing-json2.git", package = "tracing-json", features = [
   "derive",
 ] }
 

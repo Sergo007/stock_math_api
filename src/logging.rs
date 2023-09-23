@@ -24,6 +24,7 @@ fn get_filter() -> Vec<(&'static str, LevelFilter)> {
         ("mio", LevelFilter::WARN),
         ("tokio_util", LevelFilter::WARN),
         ("mio", LevelFilter::WARN),
+        ("sqlx", LevelFilter::WARN),
     ]
 }
 

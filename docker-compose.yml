@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -8,9 +8,23 @@ services:
       target: runtime
     ports:
       - "0.0.0.0:8080:8080"
-      
+
   test:
     build:
       context: .
       dockerfile: Dockerfile
       target: test
+
+  db:
+    image: postgres:13
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: pcc_athena_interop
+      POSTGRES_DB: pcc_athena_interop
+      POSTGRES_PASSWORD: pcc_athena_interop
+    command: -c ssl=off
+    volumes:
+      - ./databases/init.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./databases/init.sql:/init.sql

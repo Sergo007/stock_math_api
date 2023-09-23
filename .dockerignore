@@ -7,3 +7,4 @@ deploy.sh
 Makefile
 *.json
 Dockerfile
+.env

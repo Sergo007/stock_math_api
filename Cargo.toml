@@ -15,6 +15,14 @@ actix-web-actors = "4.2"
 actix-web-httpauth = "0.8"
 actix-rt = "2.8"
 actix_derive = "0.6"
+# 
+sqlx = { version = "0.7", features = [
+  "runtime-tokio",
+  "tls-rustls",
+  "postgres",
+  "chrono",
+  "uuid",
+] }
 
 # json serializer/deserializer
 serde = { version = "1.0", features = ["derive"] }
@@ -40,3 +48,6 @@ ctor = "0.2.0"
 metaheuristics = "1.1.22"
 time = "0.3.7"
 rand = "0.8.5"
+
+chrono = { version = "0.4.31", features = ["serde"] }
+uuid = { version = "1.4", features = ["v4", "serde"] }

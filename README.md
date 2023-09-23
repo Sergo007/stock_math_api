@@ -2,6 +2,14 @@
 
 Search for the best way through the warehouse to collect different goods for further shipment to the client.
 
+# Database migrations
+
+`cargo install sqlx-cli`
+
+`cargo uninstall sql-gen`
+
+`cargo install sql-gen`
+
 ## Application environment
 
 following system environment variables are used for `auth0` connection configuration.

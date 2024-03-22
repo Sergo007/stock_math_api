@@ -9,6 +9,7 @@ use std::{
 };
 use tracing::*;
 use tracing_json2::JsonTracing;
+mod anonymize_emails;
 mod app_error;
 mod basket;
 mod bfs_alg;
@@ -109,7 +110,7 @@ async fn main() -> Result<(), app_error::AppError> {
         .fetch_one(&pool)
         .await?;
 
-    info!("SELECT {}", row.0);
+    info!("SELECT1 {}", row.0);
 
     Ok(HttpServer::new(|| {
         let json_config = web::JsonConfig::default()

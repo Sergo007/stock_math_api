@@ -51,3 +51,4 @@ rand = "0.8.5"
 
 chrono = { version = "0.4.31", features = ["serde"] }
 uuid = { version = "1.4", features = ["v4", "serde"] }
+regex = "1.9.5"

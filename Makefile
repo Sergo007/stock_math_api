@@ -25,3 +25,6 @@ sql_gen_install_local:
 
 sql_gen_install:
 	cargo install --git https://github.com/Sergo007/sql-gen --branch fix_bugs
+
+watch:
+	cargo watch -x 'run'

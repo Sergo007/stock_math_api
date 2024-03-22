@@ -43,6 +43,7 @@ fn init_text() {
     let stdout_log = tracing_subscriber::fmt::layer()
         .with_file(true)
         .with_line_number(true)
+        .with_target(false)
         .compact();
     let filter = get_filter();
     tracing_subscriber::registry()

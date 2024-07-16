@@ -31,6 +31,7 @@ Vue.component('stock-builder-page', {
         <option value="wall">change to 'wall' type by click</option>
       </select>
       <button v-on:click="getJsonForRequest()">get json for request</button>
+      <input type="text" value="" placeholder="Points from request" v-model="pointsFromLogRequest">
     </div>
     <div class="sg-controls-height"></div>
     <div class="sg-grid-container" :style="{zoom: zoom + '%'}">
@@ -145,7 +146,7 @@ Vue.component('stock-builder-page', {
             start = [i, j]
           }
           row.push(item)
-          if (stockGeometryItems[i][j].type == "empty" && stockGeometryItems[i][j]?.request_point_number!=null) {
+          if (stockGeometryItems[i][j].type == "empty" && stockGeometryItems[i][j]?.request_point_number != null) {
             item = 'P'
             points.push([i, j]);
             stockGeometryItems[i][j].request_point_number = 0;
@@ -157,45 +158,16 @@ Vue.component('stock-builder-page', {
         arr.push(row)
       }
       request.geometry = arr
-      request.points = [start, ...points]
-      // request.points = [
-      //   [
-      //     67,
-      //     45
-      //   ],
-      //   [
-      //     32,
-      //     19
-      //   ],
-      //   [
-      //     2,
-      //     8
-      //   ],
-      //   [
-      //     8,
-      //     40
-      //   ],
-      //   [
-      //     26,
-      //     10
-      //   ],
-      //   [
-      //     14,
-      //     44
-      //   ],
-      //   [
-      //     2,
-      //     35
-      //   ],
-      //   [
-      //     29,
-      //     19
-      //   ]
-      // ]
-      console.log("points count: ",request.points.length)
-      console.log("points: ", JSON.stringify(request.points, null, 2));
+      points = [start, ...points]
+      if (this.pointsFromLogRequest != "") {
+        points = JSON.parse(this.pointsFromLogRequest)
+      }
+      console.log("points count: ",points.length)
+      console.log("points count: ",pointsCount)
+      console.log("points: ", JSON.stringify(points, null, 2));
       // console.log(text)
       // console.log(JSON.stringify(request))
+      request.points = JSON.parse(JSON.stringify(points))
       this.getOptiumRoute(request).then(resp=>{
         console.log("optium route distance",resp.distance);
         console.log("distance_matrix_time: ",resp.distance_matrix_time);
@@ -204,6 +176,8 @@ Vue.component('stock-builder-page', {
         resp.path.forEach(([i,j], index) => {
           stockGeometryItems[i][j].request_point_number = index;
         });
+
+        this.$forceUpdate();
       })
       this.getDIstanceMatrixText(request).then(resp=>{
         console.log("distance matrix: ");
@@ -217,6 +191,7 @@ Vue.component('stock-builder-page', {
       itemPosition: {x:0, y:0},
       zoom: "30",
       cell_type: "",
+      pointsFromLogRequest: "",
       stockGeometryItems: []
     }
   },

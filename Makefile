@@ -14,5 +14,8 @@ docker-build-debian:
 docker-push:
 	docker push ${IMAGE_LOCATION}/${IMAGE_NAME}:${IMAGE_TAG}
 
+docker-save:
+	docker save -o docker_images/${IMAGE_NAME}:${IMAGE_TAG}.tar ${IMAGE_LOCATION}/${IMAGE_NAME}:${IMAGE_TAG}
+
 docker-run:
 	docker run -p 8080:8080 ${IMAGE_LOCATION}/${IMAGE_NAME}:${IMAGE_TAG}

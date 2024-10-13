@@ -4,3 +4,4 @@
 .env
 /credentials
 /docker_images
+.DS_Store

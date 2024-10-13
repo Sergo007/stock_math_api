@@ -7,14 +7,13 @@ edition = "2021"
 
 [dependencies]
 
-actix = "0.13"
-actix-cors = "0.6"
-actix-files = "0.6"
-actix-web = { version = "4.3", features = ["rustls"] }
-actix-web-actors = "4.2"
+actix = "0.13.5"
+actix-cors = "0.7"
+actix-files = "0.6.6"
+actix-web = { version = "4.9", features = ["rustls"] }
 actix-web-httpauth = "0.8"
-actix-rt = "2.8"
-actix_derive = "0.6"
+actix-rt = "2.10"
+actix_derive = "0.6.2"
 
 # json serializer/deserializer
 serde = { version = "1.0", features = ["derive"] }
@@ -32,13 +31,13 @@ tracing-json2 = { git = "https://github.com/sre-university/tracing-json2.git", p
 ] }
 
 url = "2.4"
-dotenv = "0.15"
+dotenvy = "0.15"
 envy = "0.4"
 
 # ctor
-ctor = "0.2.0"
+ctor = "0.2.8"
 
 
 metaheuristics = "1.1.22"
-time = "0.3.7"
+time = "0.3.36"
 rand = "0.8.5"

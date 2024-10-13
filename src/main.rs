@@ -238,8 +238,24 @@ async fn post_calc_distances_matrix_text(
 
 #[ctor::ctor]
 fn init() {
-    // dotenv().ok();
+    dotenvy::dotenv().ok();
+    let env_file = env_file_name();
+    // Load environment variables from the ".env-chat" file, if it exists.
+    // If the file does not exist or there is an error in reading it, ignore the error (`ok()`).
+    dotenvy::from_filename(env_file).ok();
+    // Initialize the logging system.
     logging::init();
+}
+
+fn env_file_name() -> &'static str {
+    #[cfg(not(test))]
+    {
+        ".env"
+    }
+    #[cfg(test)]
+    {
+        ".env.test"
+    }
 }
 
 #[actix_web::main]
@@ -279,7 +295,7 @@ async fn main() -> std::io::Result<()> {
                     .index_file("index.html"),
             )
     })
-    .bind("0.0.0.0:8080")?
+    .bind((app_cfg.bind_address(), app_cfg.port()))?
     .run()
     .await
 }
